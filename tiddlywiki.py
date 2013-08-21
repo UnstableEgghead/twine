@@ -125,9 +125,9 @@ class TiddlyWiki:
 		
 	def toRss (self, num_items = 5):
 		"""Returns an RSS2 object of recently changed tiddlers."""
-		url = self.try_getting(['StoryUrl', 'SiteUrl'])
-		title = self.try_getting(['StoryTitle', 'SiteTitle'], 'Untitled Story')
-		subtitle = self.try_getting(['StorySubtitle', 'SiteSubtitle'])
+		url = self.tryGetting(['StoryUrl', 'SiteUrl'])
+		title = self.tryGetting(['StoryTitle', 'SiteTitle'], 'Untitled Story')
+		subtitle = self.tryGetting(['StorySubtitle', 'SiteSubtitle'])
 		
 		# build a date-sorted list of tiddler titles
 		
@@ -368,11 +368,11 @@ class Tiddler:
 
 		# <<display ''>>
 		
-		displays = re.findall(r'\<\<display\s+[\'"](.+?)[\'"]\s?\>\>', self.text, re.IGNORECASE)
+		displays = re.findall(r'\<\<display\s+[\'"](.+?)[\'"]\s*\w*\s*\>\>', self.text, re.IGNORECASE)
 		
 		# <<choice ''>>
 		
-		choices = re.findall(r'\<\<choice\s+[\'"](.+?)[\'"]\s?\>\>', self.text, re.IGNORECASE)
+		choices = re.findall(r'\<\<choice\s+[\'"](.+?)[\'"]\s*\>\>', self.text, re.IGNORECASE)
 
 		# <<actions ''>>
 		
@@ -380,10 +380,31 @@ class Tiddler:
 		actionBlocks = re.findall(r'\<\<actions\s+(.*?)\s?\>\>', self.text, re.IGNORECASE)
 		for block in actionBlocks:
 			actions = actions + re.findall(r'[\'"](.*?)[\'"]', block)
+	        
+                # <<back ''>>
 		
+		backs = re.findall(r'\<\<back\s+[\'"](.+?)[\'"]\s*\>\>', self.text, re.IGNORECASE)
+
+		# <<return ''>>
+		
+		returns = re.findall(r'\<\<return\s+[\'"](.+?)[\'"]\s*\>\>', self.text, re.IGNORECASE)
+
+		# <<binds ''>>
+		
+		binds = re.findall(r'\<\<bind\s+[\'"].+?[\'"]\s+[\'"](.+?)[\'"]\s*\>\>', self.text, re.IGNORECASE + re.DOTALL)
+
+		# <<link ''>>
+		
+		linkmacros = list()
+                for block in re.findall(r'\<\<link\s+(.+?\s*\>\>)', self.text, re.IGNORECASE + re.DOTALL):
+                        linkmacros = linkmacros + (re.findall(r'"([^"]+?)"(?=\s*\w*\s*\>\>)', block, re.IGNORECASE + re.DOTALL))
+
+		# [img['']['']]
+		
+		imglinks = re.findall(r'\[[<>]?img\[.*\]\[(.+?)\]\]', self.text, re.IGNORECASE + re.DOTALL)	
 		# remove duplicates by converting to a set
 		
-		return list(set(links + displays + choices + actions))
+		return list(set(links + displays + choices + actions + backs + returns + binds + linkmacros + imglinks))
 
 #
 # Helper functions
