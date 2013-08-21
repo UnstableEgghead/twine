@@ -35,7 +35,7 @@ class StoryFrame (wx.Frame):
         else:
             self.buildDestination = ''
             self.saveDestination = ''
-            self.target = 'sugarcane'
+            self.target = 'sugarcube'
             self.storyPanel = StoryPanel(self, app)
         
         # window events
@@ -230,6 +230,8 @@ class StoryFrame (wx.Frame):
                     sfdirlabel = 'Jonah'
                 elif sfdir == 'sugarcane': 
                     sfdirlabel = 'Sugarcane'
+                elif sfdir == 'sugarcube': 
+                    sfdirlabel = 'SugarCube'
                 elif sfdir == 'tw':
                     sfdirlabel = 'TW'
                 elif sfdir == 'tw2':
