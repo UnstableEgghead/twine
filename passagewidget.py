@@ -134,7 +134,9 @@ class PassageWidget:
         """Returns a list of broken links in this widget."""
         brokens = []
         for link in self.passage.links():
-            if not self.parent.findWidget(link): brokens.append(link)
+            if not self.parent.findWidget(link) and \
+            (not self.parent.findWidget('StoryIncludePassages') or \
+                  not link in self.parent.findWidget('StoryIncludePassages').passage.tags): brokens.append(link)
         return brokens
                  
     def setSelected (self, value, exclusive = True):

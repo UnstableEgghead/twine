@@ -489,7 +489,15 @@ class StoryFrame (wx.Frame):
             else:
                 twinedocdir = os.path.dirname(self.saveDestination)
                 os.chdir(twinedocdir)
-    
+            if not self.storyPanel.findWidget('StoryIncludePassages'):
+                self.storyPanel.newWidget(title='StoryIncludePassages', pos = (-1000, -1000), quietly = True)
+                self.storyPanel.findWidget('StoryIncludePassages').passage.tags.append('Twine.hide')
+                self.storyPanel.findWidget('StoryIncludePassages').passage.tags.append('Twine.system')
+                self.storyPanel.findWidget('StoryIncludePassages').pos = [-1000, -1000] 
+            else:
+                self.storyPanel.findWidget('StoryIncludePassages').passage.tags[:] = ['Twine.hide']
+                self.storyPanel.findWidget('StoryIncludePassages').passage.tags.append('Twine.system')
+                self.storyPanel.findWidget('StoryIncludePassages').pos = [-1000, -1000] 
             # assemble our tiddlywiki and write it out
             hasstartpassage = False
             tw = TiddlyWiki()
@@ -542,6 +550,8 @@ class StoryFrame (wx.Frame):
                                             not any('Twine.private' in t for t in widget.passage.tags) and \
                                             not any('Twine.system' in t for t in widget.passage.tags):
                                                 tw.addTiddler(widget.passage)
+                                                if self.storyPanel.findWidget('StoryIncludePassages'): 
+                                                    self.storyPanel.findWidget('StoryIncludePassages').passage.tags.append(widget.passage.title)
                                         s.Destroy()
                                     elif extension == '.tw' or extension == '.txt' or extension == '.twee':
                                         if any(state_filename.startswith(t) for t in ['http://', 'https://', 'ftp://']):
@@ -567,6 +577,8 @@ class StoryFrame (wx.Frame):
                                             not any('Twine.private' in t for t in passage.tags) and \
                                             not any('Twine.system' in t for t in passage.tags):
                                                 tw.addTiddler(passage)
+                                                if self.storyPanel.findWidget('StoryIncludePassages'): 
+                                                    self.storyPanel.findWidget('StoryIncludePassages').passage.tags.append(passage.title)
                                     else:
                                         raise 'File format not recognized'
                             except:
