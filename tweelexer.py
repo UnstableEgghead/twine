@@ -239,7 +239,7 @@ class TweeLexer:
         """
         Returns whether a given passage exists in the story.
         """
-        return (self.frame.widget.parent.findWidget(title) != None) or \
+        return (self.frame.widget.parent.findWidget(title) != None or \
               (self.frame.widget.parent.findWidget('StoryIncludePassages') and \
               title in self.frame.widget.parent.findWidget('StoryIncludePassages').passage.tags))
 
