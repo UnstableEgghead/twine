@@ -588,7 +588,7 @@ class StoryFrame (wx.Frame):
             # Write the output file
             os.chdir(os.path.dirname(self.buildDestination))
             dest = open(self.buildDestination, 'w')
-            dest.write(tw.toHtml(self.app, self.target).encode('utf-8'))
+            dest.write(tw.toHtml(self.app, self.target, savePath = self.saveDestination).encode('utf-8'))
             dest.close()
             os.chdir(cwd)
             if displayAfter: self.viewBuild()

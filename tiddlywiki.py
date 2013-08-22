@@ -46,7 +46,7 @@ class TiddlyWiki:
 		
 		return output
 		
-	def toHtml (self, app, target = None, order = None):
+	def toHtml (self, app, target = None, order = None, savePath = None):
 		"""Returns HTML code for this TiddlyWiki. If target is passed, adds a header."""
 		if not order: order = self.tiddlers.keys()
 		output = u''
@@ -71,9 +71,9 @@ class TiddlyWiki:
 						self.storysettings['Obfuscate'] == 'SWAP' and \
 						self.storysettings.has_key('ObfuscateKey'))) or \
 					self.tiddlers[i].title == 'StorySettings':
-					output += self.tiddlers[i].toHtml(self.author)
+					output += self.tiddlers[i].toHtml(self.author, savePath)
 				else:
-					output += self.tiddlers[i].toHtml(self.author, obfuscation = True, obfuscationkey = self.storysettings['ObfuscateKey'])
+					output += self.tiddlers[i].toHtml(self.author, savePath, obfuscation = True, obfuscationkey = self.storysettings['ObfuscateKey'])
 		
 		if (target):
 			footername = app.getPath() + os.sep + 'targets' + os.sep + target + os.sep + 'footer.html'
@@ -290,7 +290,7 @@ class Tiddler:
 			self.text = decode_text(text.group(1))
 				
 		
-	def toHtml (self, author = 'twee', obfuscation = False, obfuscationkey = ''):
+	def toHtml (self, author = 'twee', savePath = None, obfuscation = False, obfuscationkey = ''):
 		"""Returns an HTML representation of this tiddler."""
 			
 		now = time.localtime()
@@ -309,7 +309,7 @@ class Tiddler:
 		output += '" modified="' + encode_date(self.modified) + '"'
 		output += ' created="' + encode_date(self.created) + '"' 
 		output += ' modifier="' + author + '">'
-		output += encode_text(self.text, obfuscation, obfuscationkey,self.tags) + '</div>'
+		output += encode_text(self.text, obfuscation, obfuscationkey, self.tags, savePath) + '</div>'
 		
 		return output
 		
@@ -411,11 +411,16 @@ class Tiddler:
 #
 
 
-def encode_text (text, obfuscation, obfuscationkey):
+def encode_text (text, obfuscation, obfuscationkey, tags, savePath = ''):
 	"""Encodes a string for use in HTML output."""
 	output = text
 	if obfuscation: output = encode_obfuscate_swap(output, obfuscationkey)
         if 'media' in tags:
+                cwd = os.getcwd()
+                if savePath == '': outDir = cwd
+                else:
+                        outDir = os.path.dirname(savePath)
+                        os.chdir(outDir)
                 for imageType in ['png', 'gif', 'jpg', 'jpeg']:
                         mimeType = 'image/' + imageType if not imageType == 'jpg' else 'image/jpeg'
                         for image in re.findall(r'[\w\/\s\\-]+\.' + imageType, text, re.IGNORECASE):
@@ -446,6 +451,7 @@ def encode_text (text, obfuscation, obfuscationkey):
                                         outputfile = open('audio-goes-here.txt', 'ab')
                                         outputfile.write('Wanted audio file: ' + audio + '\n')
                                         outputfile.close()
+                os.chdir(cwd)
 	output = output.replace('\\', '\s')
         if not 'debug' in tags: output = re.sub(r'\r?\n', r'\\n', output)
         elif 'script' in tags: output = '\n' + output + '\n'
