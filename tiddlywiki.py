@@ -309,7 +309,7 @@ class Tiddler:
 		output += '" modified="' + encode_date(self.modified) + '"'
 		output += ' created="' + encode_date(self.created) + '"' 
 		output += ' modifier="' + author + '">'
-		output += encode_text(self.text, obfuscation, obfuscationkey) + '</div>'
+		output += encode_text(self.text, obfuscation, obfuscationkey,self.tags) + '</div>'
 		
 		return output
 		
@@ -416,7 +416,8 @@ def encode_text (text, obfuscation, obfuscationkey):
 	output = text
 	if obfuscation: output = encode_obfuscate_swap(output, obfuscationkey)
 	output = output.replace('\\', '\s')
-	output = re.sub(r'\r?\n', r'\\n', output)
+        if not 'debug' in tags: output = re.sub(r'\r?\n', r'\\n', output)
+        elif 'script' in tags: output = '\n' + output + '\n'
 	output = output.replace('<', '&lt;')
 	output = output.replace('>', '&gt;')
 	output = output.replace('"', '&quot;')
