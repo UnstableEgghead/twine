@@ -9,7 +9,7 @@ class App (wx.App):
     """This bootstraps our application and keeps track of preferences, etc."""
     
     NAME = 'Twine'
-    VERSION = '1.3.5 (running on Python %s.%s)' % (sys.version_info[0], sys.version_info[1]) #Named attributes not available in Python 2.6
+    VERSION = '1.3.6 (running on Python %s.%s)' % (sys.version_info[0], sys.version_info[1]) #Named attributes not available in Python 2.6
     RECENT_FILES = 5
 
     def __init__ (self, redirect = False):
@@ -269,7 +269,7 @@ class App (wx.App):
         return scriptPath
     
     NAME = 'Twine'
-    VERSION = '1.3.5'
+    VERSION = '1.3.6'
     RECENT_FILES = 10
 
 # start things up if we were called directly
