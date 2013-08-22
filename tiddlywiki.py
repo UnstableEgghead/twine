@@ -426,6 +426,16 @@ def encode_text (text, obfuscation, obfuscationkey):
                                         outputfile = open('image-goes-here.txt', 'ab')
                                         outputfile.write('Wanted image file: ' + image + '\n')
                                         outputfile.close()
+                for fontType in ['woff']:
+                        mimeType = 'application/font-' + fontType
+                        for font in re.findall(r'[\w\/\s\\-]+\.' + fontType, text, re.IGNORECASE):
+                                if os.path.isfile(font):
+                                        output = re.sub(r''+font, r'data:' + mimeType + ';base64,' +
+                                                        open(font, 'rb').read().encode('base64').replace('\n', ''), output)
+                                else:
+                                        outputfile = open('font-goes-here.txt', 'ab')
+                                        outputfile.write('Wanted font file: ' + font + '\n')
+                                        outputfile.close()
 	output = output.replace('\\', '\s')
         if not 'debug' in tags: output = re.sub(r'\r?\n', r'\\n', output)
         elif 'script' in tags: output = '\n' + output + '\n'
