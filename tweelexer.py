@@ -152,7 +152,7 @@ class TweeLexer:
                             inSilence = True;
                             styleStack.append(style)
                             style = TweeLexer.SILENT
-                    elif m.group(1).lower() == ('end' + i):
+                    elif m.group(1).lower() == ('end' + i) or m.group(1).lower() == ('/' + i):
                         if macroNestStack and macroNestStack[-1][0] == i:
                             # Re-style open macro
                             macroStart,macroLength = macroNestStack.pop()[1:];
@@ -263,7 +263,7 @@ class TweeLexer:
     
     # nested macros
     
-    NESTED_MACROS = [ "if", "silently" ]
+    NESTED_MACROS = [ "if", "silently" , "bind", "class", "id", "update", "widget" ]
     
     # style colors
     
