@@ -148,7 +148,7 @@ class TweeLexer:
                     if m.group(1).lower() == i:
                         self.applyStyle(pos, length, TweeLexer.BAD_LINK)
                         macroNestStack.append((i, pos, length))
-                        if i=="silently":
+                        if i=="silently" or i=="bind":
                             inSilence = True;
                             styleStack.append(style)
                             style = TweeLexer.SILENT
@@ -159,7 +159,7 @@ class TweeLexer:
                             self.applyStyle(macroStart,macroLength, TweeLexer.MACRO)
                         else:
                             self.applyStyle(pos, length, TweeLexer.BAD_LINK)
-                        if i=="silently":
+                        if i=="silently" or i=="bind":
                             inSilence = False;
                             style = styleStack.pop() if styleStack else TweeLexer.DEFAULT 
                 pos += length-1
