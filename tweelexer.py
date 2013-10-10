@@ -130,7 +130,7 @@ class TweeLexer:
                 elif m.group(3):
                     if not self.passageExists(m.group(4)):
                         s2 = TweeLexer.BAD_LINK
-                        for t in ['http://', 'https://', 'ftp://']:
+                        for t in ['http://', 'https://', 'ftp://', 'mailto:']:
                           if t in m.group(4).lower():
                             s2 = TweeLexer.EXTERNAL
                 self.applyStyle(pos, length, s2)
@@ -175,7 +175,7 @@ class TweeLexer:
                     self.applyStyle(pos, m.start(5), TweeLexer.IMAGE)
                     if not self.passageExists(m.group(5)):
                         s2 = TweeLexer.BAD_LINK
-                        for t in ['http://', 'https://', 'ftp://']:
+                        for t in ['http://', 'https://', 'ftp://', 'mailto:']:
                           if t in m.group(5).lower():
                             s2 = TweeLexer.EXTERNAL
                         self.applyStyle(pos+m.start(5)-1, (m.end(5)-m.start(5))+2, s2)
