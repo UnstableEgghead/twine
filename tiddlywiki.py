@@ -361,7 +361,7 @@ class Tiddler:
 		# remove external links
 		
 		def isInternalLink (text):
-			return not re.match('http://', text)
+                        return not re.match('http://|ftp://|https://|mailto:', text)
 		
 		links = map(filterPrettyLinks, links)
 		if not includeExternal: links = filter(isInternalLink, links)
